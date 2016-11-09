@@ -1,0 +1,122 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="d" x:Class="C_sharp_001.MainWindow"
+        Title="Kalkulator" ResizeMode="NoResize"
+        Width="310" Height="340"
+        Background="#232323">
+
+    <!--STATIC STYLE START-->
+    <Window.Resources>
+
+    </Window.Resources>
+    <!--STATIC STYLE END-->
+    
+    <Grid>
+        
+        <!--GRID DEFINITIONS START-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <!--GRID DEFINITIONS END-->
+        
+        <!--TEXT BOXES START-->
+        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
+			x:Name="txtDisplayMemory" Padding="2, 0"/>
+        <TextBox Grid.Row="0" Grid.Column="4" 
+			x:Name="txtDisplayOperation" TextAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5"
+			x:Name="txtDisplay" Text="0" Padding="4, 0, 4, 2"
+		    FontSize="24" />
+        <!--TEXT BOXES END-->
+
+        <!--BUTTONS BOXES END-->
+        <Button Grid.Row="2" Grid.Column="0"
+			x:Name="Button7" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="7" >
+        </Button>
+        <Button Grid.Row="2" Grid.Column="1"
+			x:Name="Button8" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="8" >
+        </Button>
+        <Button Grid.Row="2" Grid.Column="2"
+			x:Name="Button9" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="9" >
+        </Button>
+        <Button Grid.Row="2" Grid.Column="3"
+			x:Name="ButtonBackspace"
+			Click="ButtonBackspace_Click" Content="←" >
+        </Button>
+        <Button Grid.Row="2" Grid.Column="4"
+			x:Name="ButtonClear"
+			Click="ButtonClear_Click" Content="C" >
+        </Button>
+        <Button Grid.Row="3" Grid.Column="0"
+			x:Name="Button4" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="4" >
+        </Button>
+        <Button Grid.Row="3" Grid.Column="1"
+			x:Name="Button5" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="5" >
+        </Button>
+        <Button Grid.Row="3" Grid.Column="2"
+			x:Name="Button6" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="6" >
+        </Button>
+        <Button Grid.Row="3" Grid.Column="3"
+			x:Name="ButtonMultiply"
+			Click="ButtonOperation_Click" Content="*" >
+        </Button>
+        <Button Grid.Row="3" Grid.Column="4"
+			x:Name="ButtonDivide"
+			Click="ButtonOperation_Click" Content="/" >
+        </Button>
+        <Button Grid.Row="4" Grid.Column="0"
+			x:Name="Button1" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="1" >
+        </Button>
+        <Button Grid.Row="4" Grid.Column="1"
+			x:Name="Button2" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="2" >
+        </Button>
+        <Button Grid.Row="4" Grid.Column="2"
+			x:Name="Button3" Style="{StaticResource NumberButton}"
+			Click="NumberButton_Click" Content="3" >
+        </Button>
+        <Button Grid.Row="4" Grid.Column="3"
+			x:Name="ButtonSubtract"
+			Click="ButtonOperation_Click" Content="-" >
+        </Button>
+        <Button Grid.Row="4" Grid.Column="4" Grid.RowSpan="2"
+			x:Name="ButtonEquals"
+			Click="ButtonEquals_Click" Content="=" >
+        </Button>
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+			x:Name="Button0" Style="{StaticResource NumberButton}"
+			Click="Button0_Click" Content="0" >
+        </Button>
+        <Button Grid.Row="5" Grid.Column="2"
+			x:Name="ButtonComma" Style="{StaticResource NumberButton}"
+			Click="ButtonComma_Click" Content="," >
+        </Button>
+        <Button Grid.Row="5" Grid.Column="3"
+			x:Name="ButtonAdd"
+			Click="ButtonOperation_Click" Content="+" >
+        </Button>
+        <!--BUTTONS BOXES END-->
+    </Grid>
+</Window>
