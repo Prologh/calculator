@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
-namespace C_sharp_001
+namespace Kalkulator.Kalkulator
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,14 +22,12 @@ namespace C_sharp_001
         private Operation m_eLastOperationSelected = Operation.none;
         private Operation m_eOperationSelected = Operation.none;
         private double m_eMemoryValue = 0d;
-        private Calculator calc;
         private string DisplayDefault;
         private string DisplayBlank;
 
         public MainWindow()
         {
             InitializeComponent();
-            calc = new Calculator();
             DisplayDefault = Button0.Content.ToString();
             DisplayBlank = string.Empty;
         }
