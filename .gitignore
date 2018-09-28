@@ -1,12 +1,6 @@
-.idea
-*.iml
 out
 bin
 obj
-C sharp 001.sln
 .suo
 .vs
-src/META-INF
-.classpath
-.project
-C sharp 001.csproj
+*.csproj.user
