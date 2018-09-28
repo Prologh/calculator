@@ -16,6 +16,9 @@ namespace Kalkulator.Kalkulator
         private string DisplayDefault;
         private string DisplayBlank;
 
+        /// <summary>
+        /// Initializes new instance of <see cref="MainWindow"/> class.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
