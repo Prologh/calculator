@@ -10,11 +10,12 @@ namespace Kalkulator.Kalkulator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Operation m_eLastOperationSelected = Operation.None;
-        private Operation m_eOperationSelected = Operation.None;
-        private double m_eMemoryValue = 0d;
-        private string DisplayDefault;
-        private string DisplayBlank;
+        private readonly string _displayBlank = string.Empty;
+
+        private Operation _currentOperationSelected;
+        private Operation _lastOperationSelected;
+        private double _currentValue;
+        private string _displayDefault;
 
         /// <summary>
         /// Initializes new instance of <see cref="MainWindow"/> class.
@@ -22,25 +23,27 @@ namespace Kalkulator.Kalkulator
         public MainWindow()
         {
             InitializeComponent();
-            DisplayDefault = Button0.Content.ToString();
-            DisplayBlank = string.Empty;
+            _currentOperationSelected = Operation.None;
+            _lastOperationSelected = Operation.None;
+            _currentValue = 0d;
+            _displayDefault = Button0.Content.ToString();
         }
 
         private void NumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button oButton = (Button)sender;
-            if (Operation.Result == m_eLastOperationSelected)
+            if (Operation.Result == _lastOperationSelected)
             {
                 txtDisplay.Clear();
-                m_eLastOperationSelected = Operation.None;
+                _lastOperationSelected = Operation.None;
             }
-            else if (m_eLastOperationSelected != Operation.None)
+            else if (_lastOperationSelected != Operation.None)
             {
                 txtDisplay.Text = oButton.Content.ToString();
-                m_eLastOperationSelected = Operation.None;
+                _lastOperationSelected = Operation.None;
                 return;
             }
-            if (txtDisplay.Text.Contains(DisplayDefault)
+            if (txtDisplay.Text.Contains(_displayDefault)
                 && txtDisplay.Text.Length == 1)
             {
                 txtDisplay.Clear();
@@ -51,18 +54,18 @@ namespace Kalkulator.Kalkulator
         private void Button0_Click(object sender, RoutedEventArgs e)
         {
             Button oButton = (Button)sender;
-            if (Operation.Result == m_eLastOperationSelected)
+            if (Operation.Result == _lastOperationSelected)
             {
                 txtDisplay.Text = oButton.Content.ToString();
-                m_eLastOperationSelected = Operation.None;
+                _lastOperationSelected = Operation.None;
                 return;
             }
             else
             {
-                if (m_eLastOperationSelected != Operation.None)
+                if (_lastOperationSelected != Operation.None)
                 {
-                    txtDisplay.Text = DisplayDefault;
-                    m_eLastOperationSelected = Operation.None;
+                    txtDisplay.Text = _displayDefault;
+                    _lastOperationSelected = Operation.None;
                 }
                 if (txtDisplay.Text.Length > 1
                     || !txtDisplay.Text.Contains(oButton.Content.ToString()))
@@ -85,21 +88,21 @@ namespace Kalkulator.Kalkulator
 
         private void ButtonBackspace_Click(object sender, RoutedEventArgs e)
         {
-            if (Operation.Result == m_eLastOperationSelected)
+            if (Operation.Result == _lastOperationSelected)
             {
-                txtDisplay.Text = DisplayDefault;
-                m_eLastOperationSelected = Operation.None;
+                txtDisplay.Text = _displayDefault;
+                _lastOperationSelected = Operation.None;
                 return;
             }
-            else if (m_eLastOperationSelected != Operation.None)
+            else if (_lastOperationSelected != Operation.None)
             {
-                txtDisplay.Text = DisplayDefault;
-                m_eLastOperationSelected = Operation.None;
+                txtDisplay.Text = _displayDefault;
+                _lastOperationSelected = Operation.None;
                 return;
             }
             if (txtDisplay.Text.Length == 1 &&
-                !txtDisplay.Text.Contains(DisplayDefault)){
-                txtDisplay.Text = DisplayDefault;
+                !txtDisplay.Text.Contains(_displayDefault)){
+                txtDisplay.Text = _displayDefault;
                 return;
             }
             if (txtDisplay.Text.Length > 1)
@@ -114,12 +117,12 @@ namespace Kalkulator.Kalkulator
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
-            txtDisplay.Text = DisplayDefault;
+            txtDisplay.Text = _displayDefault;
             txtDisplayMemory.Clear();
             txtDisplayOperation.Clear();
-            m_eLastOperationSelected = Operation.None;
-            m_eOperationSelected = Operation.None;
-            m_eMemoryValue = 0d;
+            _lastOperationSelected = Operation.None;
+            _currentOperationSelected = Operation.None;
+            _currentValue = 0d;
         }
 
         private void ButtonOperation_Click(object sender, RoutedEventArgs e)
@@ -128,24 +131,24 @@ namespace Kalkulator.Kalkulator
             switch (oButton.Content.ToString())
             {
                 case "+":
-                    m_eLastOperationSelected = Operation.Addition;
-                    m_eOperationSelected = Operation.Addition;
+                    _lastOperationSelected = Operation.Addition;
+                    _currentOperationSelected = Operation.Addition;
                     break;
                 case "-":
-                    m_eLastOperationSelected = Operation.Subtraction;
-                    m_eOperationSelected = Operation.Subtraction;
+                    _lastOperationSelected = Operation.Subtraction;
+                    _currentOperationSelected = Operation.Subtraction;
                     break;
                 case "*":
-                    m_eLastOperationSelected = Operation.Multiplication;
-                    m_eOperationSelected = Operation.Multiplication;
+                    _lastOperationSelected = Operation.Multiplication;
+                    _currentOperationSelected = Operation.Multiplication;
                     break;
                 case "/":
-                    m_eLastOperationSelected = Operation.Division;
-                    m_eOperationSelected = Operation.Division;
+                    _lastOperationSelected = Operation.Division;
+                    _currentOperationSelected = Operation.Division;
                     break;
             }
             txtDisplayOperation.Text = oButton.Content.ToString();
-            if (txtDisplayMemory.Text.Equals(DisplayBlank))
+            if (txtDisplayMemory.Text.Equals(_displayBlank))
             {
                 txtDisplayMemory.Text = txtDisplay.Text;
             }
@@ -153,22 +156,22 @@ namespace Kalkulator.Kalkulator
 
         private void ButtonEquals_Click(object sender, RoutedEventArgs e)
         {
-            if (m_eOperationSelected != Operation.None)
+            if (_currentOperationSelected != Operation.None)
             {
                 double a = 0d, b = 0d, result = 0d;
                 MessageBoxResult error;
-                if (m_eLastOperationSelected == Operation.Result)
+                if (_lastOperationSelected == Operation.Result)
                 {
                     a = double.Parse(txtDisplay.Text);
-                    b = m_eMemoryValue;
+                    b = _currentValue;
                 }
                 else
                 {
                     a = double.Parse(txtDisplayMemory.Text);
                     b = double.Parse(txtDisplay.Text);
-                    m_eMemoryValue = b;
+                    _currentValue = b;
                 }
-                switch (m_eOperationSelected)
+                switch (_currentOperationSelected)
                 {
                     case Operation.Addition:
                         result = a + b;
@@ -198,7 +201,7 @@ namespace Kalkulator.Kalkulator
                 txtDisplay.Text = result.ToString();
                 txtDisplayMemory.Clear();
                 txtDisplayOperation.Clear();
-                m_eLastOperationSelected = Operation.Result;
+                _lastOperationSelected = Operation.Result;
             }
         }
     }
