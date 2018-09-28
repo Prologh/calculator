@@ -45,7 +45,7 @@ namespace Kalkulator.Kalkulator
                 txtDisplay.Text = oButton.Content.ToString();
                 m_eLastOperationSelected = Operation.none;
                 return;
-            }          
+            }
             if (txtDisplay.Text.Contains(DisplayDefault)
                 && txtDisplay.Text.Length == 1)
             {
@@ -107,7 +107,7 @@ namespace Kalkulator.Kalkulator
                 !txtDisplay.Text.Contains(DisplayDefault)){
                 txtDisplay.Text = DisplayDefault;
                 return;
-            }       
+            }
             if (txtDisplay.Text.Length > 1)
             {
                 string temp = string.Empty;
@@ -115,7 +115,7 @@ namespace Kalkulator.Kalkulator
                 for (int i = 1; i < txtDisplay.Text.Length; i++)
                     temp += array[i - 1];
                 txtDisplay.Text = temp;
-            }         
+            }
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
@@ -161,7 +161,7 @@ namespace Kalkulator.Kalkulator
         {
             if (m_eOperationSelected != Operation.none)
             {
-                double a = 0d, b = 0d, result = 0d;         
+                double a = 0d, b = 0d, result = 0d;
                 MessageBoxResult error;
                 if (m_eLastOperationSelected == Operation.result)
                 {
@@ -191,14 +191,14 @@ namespace Kalkulator.Kalkulator
                         else
                         {
                             error = MessageBox.Show(
-                                this, 
+                                this,
                                 "Nie da się dzielić przez zero!",
-                                "BŁĄD!", 
-                                MessageBoxButton.OK, 
+                                "BŁĄD!",
+                                MessageBoxButton.OK,
                                 MessageBoxImage.Error);
                             ButtonClear_Click(sender, e);
                             return;
-                        }            
+                        }
                         break;
                 }
                 txtDisplay.Text = result.ToString();

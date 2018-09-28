@@ -30,8 +30,8 @@
                 <EventTrigger RoutedEvent="Button.MouseEnter">
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation To="#646464" 
-                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" 
+                            <ColorAnimation To="#646464"
+                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
                                     Duration="0:0:0.2"/>
                         </Storyboard>
                     </BeginStoryboard>
@@ -39,8 +39,8 @@
                 <EventTrigger RoutedEvent="Button.MouseLeave">
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation To="#343434" 
-                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" 
+                            <ColorAnimation To="#343434"
+                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
                                     Duration="0:0:0.35"/>
                         </Storyboard>
                     </BeginStoryboard>
@@ -90,8 +90,8 @@
                 <EventTrigger RoutedEvent="Button.MouseEnter">
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation To="#646464" 
-                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" 
+                            <ColorAnimation To="#646464"
+                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
                                     Duration="0:0:0.2"/>
                         </Storyboard>
                     </BeginStoryboard>
@@ -99,8 +99,8 @@
                 <EventTrigger RoutedEvent="Button.MouseLeave">
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation To="#454545" 
-                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" 
+                            <ColorAnimation To="#454545"
+                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
                                     Duration="0:0:0.35"/>
                         </Storyboard>
                     </BeginStoryboard>
@@ -109,6 +109,6 @@
         </Style>
         <!--KEY STYLE END-->
 
-        
+
     </Application.Resources>
 </Application>

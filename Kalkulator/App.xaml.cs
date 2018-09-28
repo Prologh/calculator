@@ -7,5 +7,6 @@ namespace Kalkulator.Kalkulator
     /// </summary>
     public partial class App : Application
     {
+
     }
 }
