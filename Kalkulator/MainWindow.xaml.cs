@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Kalkulator.Models;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,18 +10,8 @@ namespace Kalkulator.Kalkulator
     /// </summary>
     public partial class MainWindow : Window
     {
-        enum Operation
-        {
-            none = 0,       // brak operacji
-            addition,       // dodawanie
-            subtraction,    // odejmowanie
-            multiplication, // mnożenie
-            division,       // dzielenie
-            result          // wynik
-        }
-
-        private Operation m_eLastOperationSelected = Operation.none;
-        private Operation m_eOperationSelected = Operation.none;
+        private Operation m_eLastOperationSelected = Operation.None;
+        private Operation m_eOperationSelected = Operation.None;
         private double m_eMemoryValue = 0d;
         private string DisplayDefault;
         private string DisplayBlank;
@@ -35,15 +26,15 @@ namespace Kalkulator.Kalkulator
         private void NumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button oButton = (Button)sender;
-            if (Operation.result == m_eLastOperationSelected)
+            if (Operation.Result == m_eLastOperationSelected)
             {
                 txtDisplay.Clear();
-                m_eLastOperationSelected = Operation.none;
+                m_eLastOperationSelected = Operation.None;
             }
-            else if (m_eLastOperationSelected != Operation.none)
+            else if (m_eLastOperationSelected != Operation.None)
             {
                 txtDisplay.Text = oButton.Content.ToString();
-                m_eLastOperationSelected = Operation.none;
+                m_eLastOperationSelected = Operation.None;
                 return;
             }
             if (txtDisplay.Text.Contains(DisplayDefault)
@@ -57,18 +48,18 @@ namespace Kalkulator.Kalkulator
         private void Button0_Click(object sender, RoutedEventArgs e)
         {
             Button oButton = (Button)sender;
-            if (Operation.result == m_eLastOperationSelected)
+            if (Operation.Result == m_eLastOperationSelected)
             {
                 txtDisplay.Text = oButton.Content.ToString();
-                m_eLastOperationSelected = Operation.none;
+                m_eLastOperationSelected = Operation.None;
                 return;
             }
             else
             {
-                if (m_eLastOperationSelected != Operation.none)
+                if (m_eLastOperationSelected != Operation.None)
                 {
                     txtDisplay.Text = DisplayDefault;
-                    m_eLastOperationSelected = Operation.none;
+                    m_eLastOperationSelected = Operation.None;
                 }
                 if (txtDisplay.Text.Length > 1
                     || !txtDisplay.Text.Contains(oButton.Content.ToString()))
@@ -91,16 +82,16 @@ namespace Kalkulator.Kalkulator
 
         private void ButtonBackspace_Click(object sender, RoutedEventArgs e)
         {
-            if (Operation.result == m_eLastOperationSelected)
+            if (Operation.Result == m_eLastOperationSelected)
             {
                 txtDisplay.Text = DisplayDefault;
-                m_eLastOperationSelected = Operation.none;
+                m_eLastOperationSelected = Operation.None;
                 return;
             }
-            else if (m_eLastOperationSelected != Operation.none)
+            else if (m_eLastOperationSelected != Operation.None)
             {
                 txtDisplay.Text = DisplayDefault;
-                m_eLastOperationSelected = Operation.none;
+                m_eLastOperationSelected = Operation.None;
                 return;
             }
             if (txtDisplay.Text.Length == 1 &&
@@ -123,8 +114,8 @@ namespace Kalkulator.Kalkulator
             txtDisplay.Text = DisplayDefault;
             txtDisplayMemory.Clear();
             txtDisplayOperation.Clear();
-            m_eLastOperationSelected = Operation.none;
-            m_eOperationSelected = Operation.none;
+            m_eLastOperationSelected = Operation.None;
+            m_eOperationSelected = Operation.None;
             m_eMemoryValue = 0d;
         }
 
@@ -134,20 +125,20 @@ namespace Kalkulator.Kalkulator
             switch (oButton.Content.ToString())
             {
                 case "+":
-                    m_eLastOperationSelected = Operation.addition;
-                    m_eOperationSelected = Operation.addition;
+                    m_eLastOperationSelected = Operation.Addition;
+                    m_eOperationSelected = Operation.Addition;
                     break;
                 case "-":
-                    m_eLastOperationSelected = Operation.subtraction;
-                    m_eOperationSelected = Operation.subtraction;
+                    m_eLastOperationSelected = Operation.Subtraction;
+                    m_eOperationSelected = Operation.Subtraction;
                     break;
                 case "*":
-                    m_eLastOperationSelected = Operation.multiplication;
-                    m_eOperationSelected = Operation.multiplication;
+                    m_eLastOperationSelected = Operation.Multiplication;
+                    m_eOperationSelected = Operation.Multiplication;
                     break;
                 case "/":
-                    m_eLastOperationSelected = Operation.division;
-                    m_eOperationSelected = Operation.division;
+                    m_eLastOperationSelected = Operation.Division;
+                    m_eOperationSelected = Operation.Division;
                     break;
             }
             txtDisplayOperation.Text = oButton.Content.ToString();
@@ -159,11 +150,11 @@ namespace Kalkulator.Kalkulator
 
         private void ButtonEquals_Click(object sender, RoutedEventArgs e)
         {
-            if (m_eOperationSelected != Operation.none)
+            if (m_eOperationSelected != Operation.None)
             {
                 double a = 0d, b = 0d, result = 0d;
                 MessageBoxResult error;
-                if (m_eLastOperationSelected == Operation.result)
+                if (m_eLastOperationSelected == Operation.Result)
                 {
                     a = double.Parse(txtDisplay.Text);
                     b = m_eMemoryValue;
@@ -176,16 +167,16 @@ namespace Kalkulator.Kalkulator
                 }
                 switch (m_eOperationSelected)
                 {
-                    case Operation.addition:
+                    case Operation.Addition:
                         result = a + b;
                         break;
-                    case Operation.subtraction:
+                    case Operation.Subtraction:
                         result = a - b;
                         break;
-                    case Operation.multiplication:
+                    case Operation.Multiplication:
                         result = a * b;
                         break;
-                    case Operation.division:
+                    case Operation.Division:
                         if (b != 0d)
                             result = a / b;
                         else
@@ -204,7 +195,7 @@ namespace Kalkulator.Kalkulator
                 txtDisplay.Text = result.ToString();
                 txtDisplayMemory.Clear();
                 txtDisplayOperation.Clear();
-                m_eLastOperationSelected = Operation.result;
+                m_eLastOperationSelected = Operation.Result;
             }
         }
     }
