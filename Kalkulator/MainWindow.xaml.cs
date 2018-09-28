@@ -1,4 +1,5 @@
 ﻿using Kalkulator.Models;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,24 +32,32 @@ namespace Kalkulator.Kalkulator
 
         private void NumberButton_Click(object sender, RoutedEventArgs e)
         {
-            Button oButton = (Button)sender;
+            if (!(sender is Button sourceButton))
+            {
+                throw new ArgumentException($"{nameof(sender)} is not an instance of {nameof(Button)}.", nameof(sender));
+            }
+
             if (Operation.Result == _lastOperationSelected)
             {
                 txtDisplay.Clear();
                 _lastOperationSelected = Operation.None;
             }
-            else if (_lastOperationSelected != Operation.None)
+            else
             {
-                txtDisplay.Text = oButton.Content.ToString();
-                _lastOperationSelected = Operation.None;
-                return;
+                if (_lastOperationSelected != Operation.None)
+                {
+                    txtDisplay.Text = sourceButton.Content.ToString();
+                    _lastOperationSelected = Operation.None;
+                    return;
+                }
             }
-            if (txtDisplay.Text.Contains(_displayDefault)
-                && txtDisplay.Text.Length == 1)
+
+            if (txtDisplay.Text.Contains(_displayDefault) && txtDisplay.Text.Length == 1)
             {
                 txtDisplay.Clear();
             }
-            txtDisplay.Text += oButton.Content;
+
+            txtDisplay.Text += sourceButton.Content;
         }
 
         private void Button0_Click(object sender, RoutedEventArgs e)
@@ -101,7 +110,8 @@ namespace Kalkulator.Kalkulator
                 return;
             }
             if (txtDisplay.Text.Length == 1 &&
-                !txtDisplay.Text.Contains(_displayDefault)){
+                !txtDisplay.Text.Contains(_displayDefault))
+            {
                 txtDisplay.Text = _displayDefault;
                 return;
             }
