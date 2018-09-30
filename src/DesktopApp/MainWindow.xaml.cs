@@ -62,10 +62,14 @@ namespace Calculator.DesktopApp
 
         private void Button0_Click(object sender, RoutedEventArgs e)
         {
-            Button oButton = (Button)sender;
+            if (!(sender is Button sourceButton))
+            {
+                throw new ArgumentException($"{nameof(sender)} is not an instance of {nameof(Button)}.", nameof(sender));
+            }
+
             if (Operation.Result == _lastOperationSelected)
             {
-                txtDisplay.Text = oButton.Content.ToString();
+                txtDisplay.Text = sourceButton.Content.ToString();
                 _lastOperationSelected = Operation.None;
                 return;
             }
@@ -77,22 +81,26 @@ namespace Calculator.DesktopApp
                     _lastOperationSelected = Operation.None;
                 }
                 if (txtDisplay.Text.Length > 1
-                    || !txtDisplay.Text.Contains(oButton.Content.ToString()))
+                    || !txtDisplay.Text.Contains(sourceButton.Content.ToString()))
                 {
-                    txtDisplay.Text += oButton.Content;
+                    txtDisplay.Text += sourceButton.Content;
                 }
             }
         }
 
         private void ButtonComma_Click(object sender, RoutedEventArgs e)
         {
-            Button oButton = (Button)sender;
-            if ((txtDisplay.Text.Contains(oButton.Content.ToString())) ||
+            if (!(sender is Button sourceButton))
+            {
+                throw new ArgumentException($"{nameof(sender)} is not an instance of {nameof(Button)}.", nameof(sender));
+            }
+
+            if ((txtDisplay.Text.Contains(sourceButton.Content.ToString())) ||
                 (0 == txtDisplay.Text.Length))
             {
                 return;
             }
-            txtDisplay.Text += oButton.Content.ToString();
+            txtDisplay.Text += sourceButton.Content.ToString();
         }
 
         private void ButtonBackspace_Click(object sender, RoutedEventArgs e)
@@ -137,8 +145,12 @@ namespace Calculator.DesktopApp
 
         private void ButtonOperation_Click(object sender, RoutedEventArgs e)
         {
-            Button oButton = (Button)sender;
-            switch (oButton.Content.ToString())
+            if (!(sender is Button sourceButton))
+            {
+                throw new ArgumentException($"{nameof(sender)} is not an instance of {nameof(Button)}.", nameof(sender));
+            }
+
+            switch (sourceButton.Content.ToString())
             {
                 case "+":
                     _lastOperationSelected = Operation.Addition;
@@ -157,7 +169,7 @@ namespace Calculator.DesktopApp
                     _currentOperationSelected = Operation.Division;
                     break;
             }
-            txtDisplayOperation.Text = oButton.Content.ToString();
+            txtDisplayOperation.Text = sourceButton.Content.ToString();
             if (txtDisplayMemory.Text.Equals(_displayBlank))
             {
                 txtDisplayMemory.Text = txtDisplay.Text;
