@@ -1,4 +1,4 @@
-﻿namespace Kalkulator.Models
+﻿namespace Calculator.DesktopApp.Models
 {
     /// <summary>
     /// Indicates type of mathematical operation.

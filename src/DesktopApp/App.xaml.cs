@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Kalkulator.Kalkulator
+namespace Calculator.DesktopApp
 {
     /// <summary>
     /// Interaction logic for App.xaml

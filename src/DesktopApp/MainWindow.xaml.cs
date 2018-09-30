@@ -1,10 +1,10 @@
-﻿using Kalkulator.Models;
+﻿using Calculator.DesktopApp.Models;
 using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Kalkulator.Kalkulator
+namespace Calculator.DesktopApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
