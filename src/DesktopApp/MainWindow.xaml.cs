@@ -1,6 +1,8 @@
 ﻿using Calculator.DesktopApp.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,9 +14,10 @@ namespace Calculator.DesktopApp
     public partial class MainWindow : Window
     {
         private readonly string _displayBlank = string.Empty;
+        private readonly IReadOnlyList<Operation> _operations;
 
-        private OperationType _currentOperationSelected;
-        private OperationType _lastOperationSelected;
+        private Operation _currentOperationSelected;
+        private Operation _lastOperationSelected;
         private double _currentValue;
         private string _displayDefault;
 
@@ -24,10 +27,14 @@ namespace Calculator.DesktopApp
         public MainWindow()
         {
             InitializeComponent();
-            _currentOperationSelected = OperationType.None;
-            _lastOperationSelected = OperationType.None;
+            _currentOperationSelected = Operation.None;
+            _lastOperationSelected = Operation.None;
             _currentValue = 0d;
             _displayDefault = Button0.Content.ToString();
+
+            var properties = typeof(Operation).GetProperties(BindingFlags.Public | BindingFlags.Static);
+            var values = properties.Select(propInfo => propInfo.GetValue(null, null));
+            _operations = values.OfType<Operation>().ToList();
         }
 
         private void NumberButton_Click(object sender, RoutedEventArgs e)
@@ -37,17 +44,18 @@ namespace Calculator.DesktopApp
                 throw new ArgumentException($"{nameof(sender)} is not an instance of {nameof(Button)}.", nameof(sender));
             }
 
-            if (OperationType.Result == _lastOperationSelected)
+            if (Operation.Result == _lastOperationSelected)
             {
                 txtDisplay.Clear();
-                _lastOperationSelected = OperationType.None;
+                _lastOperationSelected = Operation.None;
             }
             else
             {
-                if (_lastOperationSelected != OperationType.None)
+                if (_lastOperationSelected != Operation.None)
                 {
                     txtDisplay.Text = sourceButton.Content.ToString();
-                    _lastOperationSelected = OperationType.None;
+                    _lastOperationSelected = Operation.None;
+
                     return;
                 }
             }
@@ -67,18 +75,19 @@ namespace Calculator.DesktopApp
                 throw new ArgumentException($"{nameof(sender)} is not an instance of {nameof(Button)}.", nameof(sender));
             }
 
-            if (OperationType.Result == _lastOperationSelected)
+            if (Operation.Result == _lastOperationSelected)
             {
                 txtDisplay.Text = sourceButton.Content.ToString();
-                _lastOperationSelected = OperationType.None;
+                _lastOperationSelected = Operation.None;
+
                 return;
             }
             else
             {
-                if (_lastOperationSelected != OperationType.None)
+                if (_lastOperationSelected != Operation.None)
                 {
                     txtDisplay.Text = _displayDefault;
-                    _lastOperationSelected = OperationType.None;
+                    _lastOperationSelected = Operation.None;
                 }
                 if (txtDisplay.Text.Length > 1
                     || !txtDisplay.Text.Contains(sourceButton.Content.ToString()))
@@ -100,23 +109,26 @@ namespace Calculator.DesktopApp
             {
                 return;
             }
+
             txtDisplay.Text += sourceButton.Content.ToString();
         }
 
         private void ButtonBackspace_Click(object sender, RoutedEventArgs e)
         {
-            if (OperationType.Result == _lastOperationSelected)
+            if (Operation.Result == _lastOperationSelected)
             {
                 txtDisplay.Text = _displayDefault;
-                _lastOperationSelected = OperationType.None;
+                _lastOperationSelected = Operation.None;
+
                 return;
             }
             else
             {
-                if (_lastOperationSelected != OperationType.None)
+                if (_lastOperationSelected != Operation.None)
                 {
                     txtDisplay.Text = _displayDefault;
-                    _lastOperationSelected = OperationType.None;
+                    _lastOperationSelected = Operation.None;
+
                     return;
                 }
             }
@@ -124,16 +136,20 @@ namespace Calculator.DesktopApp
             if (txtDisplay.Text.Length == 1 && !txtDisplay.Text.Contains(_displayDefault))
             {
                 txtDisplay.Text = _displayDefault;
+
                 return;
             }
 
             if (txtDisplay.Text.Length > 1)
             {
-                string temp = string.Empty;
-                char[] array = txtDisplay.Text.ToArray();
+                var tempString = string.Empty;
+                var charArray = txtDisplay.Text.ToArray();
                 for (int i = 1; i < txtDisplay.Text.Length; i++)
-                    temp += array[i - 1];
-                txtDisplay.Text = temp;
+                {
+                    tempString += charArray[i - 1];
+                }
+
+                txtDisplay.Text = tempString;
             }
         }
 
@@ -142,8 +158,8 @@ namespace Calculator.DesktopApp
             txtDisplay.Text = _displayDefault;
             txtDisplayMemory.Clear();
             txtDisplayOperation.Clear();
-            _lastOperationSelected = OperationType.None;
-            _currentOperationSelected = OperationType.None;
+            _lastOperationSelected = Operation.None;
+            _currentOperationSelected = Operation.None;
             _currentValue = 0d;
         }
 
@@ -157,20 +173,20 @@ namespace Calculator.DesktopApp
             switch (sourceButton.Content.ToString())
             {
                 case "+":
-                    _lastOperationSelected = OperationType.Addition;
-                    _currentOperationSelected = OperationType.Addition;
+                    _lastOperationSelected = Operation.Addition;
+                    _currentOperationSelected = Operation.Addition;
                     break;
                 case "-":
-                    _lastOperationSelected = OperationType.Subtraction;
-                    _currentOperationSelected = OperationType.Subtraction;
+                    _lastOperationSelected = Operation.Subtraction;
+                    _currentOperationSelected = Operation.Subtraction;
                     break;
                 case "*":
-                    _lastOperationSelected = OperationType.Multiplication;
-                    _currentOperationSelected = OperationType.Multiplication;
+                    _lastOperationSelected = Operation.Multiplication;
+                    _currentOperationSelected = Operation.Multiplication;
                     break;
                 case "/":
-                    _lastOperationSelected = OperationType.Division;
-                    _currentOperationSelected = OperationType.Division;
+                    _lastOperationSelected = Operation.Division;
+                    _currentOperationSelected = Operation.Division;
                     break;
             }
 
@@ -183,10 +199,10 @@ namespace Calculator.DesktopApp
 
         private void ButtonEquals_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentOperationSelected != OperationType.None)
+            if (_currentOperationSelected != Operation.None)
             {
                 double a = 0d, b = 0d, result = 0d;
-                if (_lastOperationSelected == OperationType.Result)
+                if (_lastOperationSelected == Operation.Result)
                 {
                     a = double.Parse(txtDisplay.Text);
                     b = _currentValue;
@@ -202,7 +218,7 @@ namespace Calculator.DesktopApp
                 {
                     try
                     {
-                        result = _currentOperationSelected.Operation(a, b);
+                        result = _currentOperationSelected.Function(a, b);
                     }
                     catch (DivideByZeroException)
                     {
@@ -219,7 +235,7 @@ namespace Calculator.DesktopApp
                 txtDisplay.Text = result.ToString();
                 txtDisplayMemory.Clear();
                 txtDisplayOperation.Clear();
-                _lastOperationSelected = OperationType.Result;
+                _lastOperationSelected = Operation.Result;
             }
         }
     }
