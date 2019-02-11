@@ -23,16 +23,9 @@ namespace Calculator.DesktopApp.Models
         /// as a divider value.
         /// </summary>
         public static Operation Division => new Operation("/", nameof(Division), (a, b) =>
-            {
-                if (b != 0d)
-                {
-                    return a / b;
-                }
-                else
-                {
-                    throw new DivideByZeroException($"Division of {a} by zero.");
-                }
-            }
+            b != 0d
+                ? a / b
+                : throw new DivideByZeroException($"Cannot divide {a} by zero.")
         );
 
         /// <summary>
