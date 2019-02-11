@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Calculator.DesktopApp
 {
@@ -32,9 +33,11 @@ namespace Calculator.DesktopApp
             _currentValue = 0d;
             _displayDefault = Button0.Content.ToString();
 
-            var properties = typeof(Operation).GetProperties(BindingFlags.Public | BindingFlags.Static);
-            var values = properties.Select(propInfo => propInfo.GetValue(null, null));
-            _operations = values.OfType<Operation>().ToList();
+            var properties = typeof(Operation)
+                .GetProperties(BindingFlags.Public | BindingFlags.Static)
+                .Select(propInfo => propInfo.GetValue(null, null))
+                .OfType<Operation>()
+                .ToList();
         }
 
         private void NumberButton_Click(object sender, RoutedEventArgs e)
@@ -236,6 +239,14 @@ namespace Calculator.DesktopApp
                 txtDisplayMemory.Clear();
                 txtDisplayOperation.Clear();
                 _lastOperationSelected = Operation.Result;
+            }
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (e.Key == Key.Back)
+            {
+                ButtonBackspace_Click(this, e);
             }
         }
     }

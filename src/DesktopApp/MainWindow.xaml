@@ -59,7 +59,7 @@
         </Button>
         <Button Grid.Row="2" Grid.Column="3"
 			x:Name="ButtonBackspace"
-			Click="ButtonBackspace_Click" Content="←" >
+			Click="ButtonBackspace_Click" Content="←">
         </Button>
         <Button Grid.Row="2" Grid.Column="4"
 			x:Name="ButtonClear"

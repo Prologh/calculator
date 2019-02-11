@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Calculator.DesktopApp.Models
 {
@@ -13,7 +14,7 @@ namespace Calculator.DesktopApp.Models
         /// <summary>
         /// Gets the addition operation.
         /// </summary>
-        public static Operation Addition => new Operation("+", nameof(Addition), (a, b) => a + b);
+        public static Operation Addition => new Operation("+", Key.Add, nameof(Addition), (a, b) => a + b);
 
         /// <summary>
         /// Gets the division operation.
@@ -22,7 +23,7 @@ namespace Calculator.DesktopApp.Models
         /// <see cref="DivideByZeroException"/> when zero is passed
         /// as a divider value.
         /// </summary>
-        public static Operation Division => new Operation("/", nameof(Division), (a, b) =>
+        public static Operation Division => new Operation("/", Key.Divide, nameof(Division), (a, b) =>
             b != 0d
                 ? a / b
                 : throw new DivideByZeroException($"Cannot divide {a} by zero.")
@@ -31,7 +32,7 @@ namespace Calculator.DesktopApp.Models
         /// <summary>
         /// Gets the multiplication operation.
         /// </summary>
-        public static Operation Multiplication => new Operation("*", nameof(Multiplication), (a, b) => a * b);
+        public static Operation Multiplication => new Operation("*", Key.Multiply, nameof(Multiplication), (a, b) => a * b);
 
         /// <summary>
         /// Gets the none operation. The underlying function will not perform
@@ -43,18 +44,26 @@ namespace Calculator.DesktopApp.Models
         /// Gets the result operation. The underlying function will not perform
         /// any calculations and will always return first argument as a result.
         /// </summary>
-        public static Operation Result => new Operation("=", nameof(Result), NoCalculationFunction);
+        public static Operation Result => new Operation("=", Key.Decimal, nameof(Result), NoCalculationFunction);
 
         /// <summary>
         /// Gets the substraction operation.
         /// </summary>
-        public static Operation Subtraction => new Operation("-", nameof(Subtraction), (a, b) => a - b);
+        public static Operation Subtraction => new Operation("-", Key.Subtract, nameof(Subtraction), (a, b) => a - b);
 
         private static Func<double, double, double> NoCalculationFunction => (a, b) => a;
 
         private Operation(string sign, string name, Func<double, double, double> function)
         {
             Sign = sign;
+            Name = name;
+            Function = function;
+        }
+
+        private Operation(string sign, Key key, string name, Func<double, double, double> function)
+        {
+            Sign = sign;
+            Key = key;
             Name = name;
             Function = function;
         }
@@ -69,6 +78,11 @@ namespace Calculator.DesktopApp.Models
         /// function of current operation is affecting returned result.
         /// </summary>
         public bool IsAffectingResult => Function != NoCalculationFunction;
+
+        /// <summary>
+        /// Gets the key triggering the operation.
+        /// </summary>
+        public Key Key { get; }
 
         /// <summary>
         /// Gets the operation name.
