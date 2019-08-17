@@ -46,7 +46,7 @@ namespace Calculator.DesktopApp
                 .ToList();
         }
 
-        private void NumberButton_Click(object sender, RoutedEventArgs e)
+        private void ButtonDigit_Click(object sender, RoutedEventArgs e)
         {
             if (!(sender is ContentControl sourceContentControl))
             {

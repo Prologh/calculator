@@ -47,15 +47,15 @@
         <!--BUTTONS BOXES END-->
         <Button Grid.Row="2" Grid.Column="0"
 			x:Name="Button7" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="7" >
+			Click="ButtonDigit_Click" Content="7" >
         </Button>
         <Button Grid.Row="2" Grid.Column="1"
 			x:Name="Button8" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="8" >
+			Click="ButtonDigit_Click" Content="8" >
         </Button>
         <Button Grid.Row="2" Grid.Column="2"
 			x:Name="Button9" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="9" >
+			Click="ButtonDigit_Click" Content="9" >
         </Button>
         <Button Grid.Row="2" Grid.Column="3"
 			x:Name="ButtonBackspace"
@@ -67,15 +67,15 @@
         </Button>
         <Button Grid.Row="3" Grid.Column="0"
 			x:Name="Button4" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="4" >
+			Click="ButtonDigit_Click" Content="4" >
         </Button>
         <Button Grid.Row="3" Grid.Column="1"
 			x:Name="Button5" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="5" >
+			Click="ButtonDigit_Click" Content="5" >
         </Button>
         <Button Grid.Row="3" Grid.Column="2"
 			x:Name="Button6" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="6" >
+			Click="ButtonDigit_Click" Content="6" >
         </Button>
         <Button Grid.Row="3" Grid.Column="3"
 			x:Name="ButtonMultiply"
@@ -87,15 +87,15 @@
         </Button>
         <Button Grid.Row="4" Grid.Column="0"
 			x:Name="Button1" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="1" >
+			Click="ButtonDigit_Click" Content="1" >
         </Button>
         <Button Grid.Row="4" Grid.Column="1"
 			x:Name="Button2" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="2" >
+			Click="ButtonDigit_Click" Content="2" >
         </Button>
         <Button Grid.Row="4" Grid.Column="2"
 			x:Name="Button3" Style="{StaticResource NumberButton}"
-			Click="NumberButton_Click" Content="3" >
+			Click="ButtonDigit_Click" Content="3" >
         </Button>
         <Button Grid.Row="4" Grid.Column="3"
 			x:Name="ButtonSubtract"
