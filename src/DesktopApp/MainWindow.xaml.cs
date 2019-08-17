@@ -79,7 +79,7 @@ namespace Calculator.DesktopApp
             txtDisplay.Text += sourceContentControl.Content;
         }
 
-        private void Button0_Click(object sender, RoutedEventArgs e)
+        private void ButtonZero_Click(object sender, RoutedEventArgs e)
         {
             if (!(sender is ContentControl sourceContentControl))
             {
@@ -157,15 +157,7 @@ namespace Calculator.DesktopApp
 
             if (txtDisplay.Text.Length > 1)
             {
-                var stringBuilder = new StringBuilder();
-                var charArray = txtDisplay.Text.ToArray();
-
-                for (int i = 1; i < txtDisplay.Text.Length; i++)
-                {
-                    stringBuilder.Append(charArray[i - 1]);
-                }
-
-                txtDisplay.Text = stringBuilder.ToString();
+                txtDisplay.Text = txtDisplay.Text.Remove(0, 1);
             }
         }
 

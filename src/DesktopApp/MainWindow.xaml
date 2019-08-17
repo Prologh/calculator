@@ -107,7 +107,7 @@
         </Button>
         <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
 			x:Name="Button0" Style="{StaticResource NumberButton}"
-			Click="Button0_Click" Content="0" >
+			Click="ButtonZero_Click" Content="0" >
         </Button>
         <Button Grid.Row="5" Grid.Column="2"
 			x:Name="ButtonComma" Style="{StaticResource NumberButton}"
