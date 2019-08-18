@@ -1,6 +1,7 @@
 ﻿using Calculator.DesktopApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,8 +16,11 @@ namespace Calculator.DesktopApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly IEnumerable<Key> _digitsKeys;
         private readonly string _emptyTextBoxValue;
-        private readonly IReadOnlyList<Operation> _operations;
+        private readonly IEnumerable<Operation> _operations;
+        private readonly IEnumerable<Key> _operationsKeys;
+        private readonly IEnumerable<string> _operationsSigns;
 
         private Operation _currentOperationSelected;
         private Operation _lastOperationSelected;
@@ -42,8 +46,58 @@ namespace Calculator.DesktopApp
                 .GetProperties(BindingFlags.Public | BindingFlags.Static)
                 .Select(propInfo => propInfo.GetValue(null, null))
                 .OfType<Operation>()
-                .Where(o => o.IsAffectingResult)
-                .ToList();
+                .Where(o => o.IsAffectingResult);
+            _operationsKeys = _operations.Select(o => o.Key);
+            _operationsSigns = _operations.Select(o => o.Sign);
+
+            _digitsKeys = new List<Key>
+            {
+                Key.D0,
+                Key.D1,
+                Key.D2,
+                Key.D3,
+                Key.D4,
+                Key.D5,
+                Key.D6,
+                Key.D7,
+                Key.D8,
+                Key.D9,
+            };
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (_operationsKeys.Contains(e.Key))
+            {
+                var operation = _operations.FirstOrDefault(o => o.Key == e.Key);
+
+                if (operation != null)
+                {
+                    SetOperation(operation);
+                }
+
+                return;
+            }
+
+            if (_digitsKeys.Contains(e.Key))
+            {
+                AppendDigit(e.Key.ToString().TrimStart('D'));
+
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case Key.Back:
+                    TrimLastDigit();
+                    break;
+                case Key.Enter:
+                    ButtonEquals_Click(this, e);
+                    break;
+                case Key.C:
+                    ButtonClear_Click(this, e);
+                    break;
+            }
         }
 
         private void ButtonDigit_Click(object sender, RoutedEventArgs e)
@@ -55,120 +109,28 @@ namespace Calculator.DesktopApp
                     nameof(sender));
             }
 
-            if (Operation.Result == _lastOperationSelected)
-            {
-                txtDisplay.Clear();
-                _lastOperationSelected = Operation.None;
-            }
-            else
-            {
-                if (_lastOperationSelected != Operation.None)
-                {
-                    txtDisplay.Text = sourceContentControl.Content.ToString();
-                    _lastOperationSelected = Operation.None;
-
-                    return;
-                }
-            }
-
-            if (txtDisplay.Text.Contains(_displayDefault) && txtDisplay.Text.Length == 1)
-            {
-                txtDisplay.Clear();
-            }
-
-            txtDisplay.Text += sourceContentControl.Content;
+            var digit = sourceContentControl.Content.ToString();
+            AppendDigit(digit);
         }
 
         private void ButtonZero_Click(object sender, RoutedEventArgs e)
         {
-            if (!(sender is ContentControl sourceContentControl))
-            {
-                throw new ArgumentException(
-                    $"{nameof(sender)} is not an instance of {nameof(ContentControl)}.",
-                    nameof(sender));
-            }
-
-            if (Operation.Result == _lastOperationSelected)
-            {
-                txtDisplay.Text = sourceContentControl.Content.ToString();
-                _lastOperationSelected = Operation.None;
-
-                return;
-            }
-            else
-            {
-                if (_lastOperationSelected != Operation.None)
-                {
-                    txtDisplay.Text = _displayDefault;
-                    _lastOperationSelected = Operation.None;
-                }
-                if (txtDisplay.Text.Length > 1
-                    || !txtDisplay.Text.Contains(sourceContentControl.Content.ToString()))
-                {
-                    txtDisplay.Text += sourceContentControl.Content;
-                }
-            }
+            AppendZero();
         }
 
         private void ButtonComma_Click(object sender, RoutedEventArgs e)
         {
-            if (!(sender is ContentControl sourceContentControl))
-            {
-                throw new ArgumentException(
-                    $"{nameof(sender)} is not an instance of {nameof(ContentControl)}.",
-                    nameof(sender));
-            }
-
-            if (txtDisplay.Text.Contains(sourceContentControl.Content.ToString())
-                || (0 == txtDisplay.Text.Length))
-            {
-                return;
-            }
-
-            txtDisplay.Text += sourceContentControl.Content.ToString();
+            AppendComma();
         }
 
         private void ButtonBackspace_Click(object sender, RoutedEventArgs e)
         {
-            if (Operation.Result == _lastOperationSelected)
-            {
-                txtDisplay.Text = _displayDefault;
-                _lastOperationSelected = Operation.None;
-
-                return;
-            }
-            else
-            {
-                if (_lastOperationSelected != Operation.None)
-                {
-                    txtDisplay.Text = _displayDefault;
-                    _lastOperationSelected = Operation.None;
-
-                    return;
-                }
-            }
-
-            if (txtDisplay.Text.Length == 1 && !txtDisplay.Text.Contains(_displayDefault))
-            {
-                txtDisplay.Text = _displayDefault;
-
-                return;
-            }
-
-            if (txtDisplay.Text.Length > 1)
-            {
-                txtDisplay.Text = txtDisplay.Text.Remove(0, 1);
-            }
+            TrimLastDigit();
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
-            txtDisplay.Text = _displayDefault;
-            txtDisplayMemory.Clear();
-            txtDisplayOperation.Clear();
-            _lastOperationSelected = Operation.None;
-            _currentOperationSelected = Operation.None;
-            _currentValue = 0d;
+            ResetCalculator();
         }
 
         private void ButtonOperation_Click(object sender, RoutedEventArgs e)
@@ -183,22 +145,75 @@ namespace Calculator.DesktopApp
             var operationSign = sourceContentControl.Content.ToString();
             var operation = _operations.FirstOrDefault(o => o.Sign == operationSign);
 
-            if (operation == null)
+            if (operation != null)
             {
-                return;
-            }
-
-            _lastOperationSelected = operation;
-            _currentOperationSelected = operation;
-            txtDisplayOperation.Text = operation.Sign;
-
-            if (txtDisplayMemory.Text.Equals(_emptyTextBoxValue))
-            {
-                txtDisplayMemory.Text = txtDisplay.Text;
+                SetOperation(operation);
             }
         }
 
         private void ButtonEquals_Click(object sender, RoutedEventArgs e)
+        {
+            CalculateOperation();
+        }
+
+        private void AppendComma()
+        {
+            if (!txtDisplay.Text.Contains(",") && (txtDisplay.Text.Length > 0))
+            {
+                txtDisplay.Text += ",";
+            }
+        }
+
+        private void AppendDigit(string digit)
+        {
+            if (Operation.Result == _lastOperationSelected)
+            {
+                txtDisplay.Clear();
+                _lastOperationSelected = Operation.None;
+            }
+            else
+            {
+                if (_lastOperationSelected != Operation.None)
+                {
+                    txtDisplay.Text = digit;
+                    _lastOperationSelected = Operation.None;
+
+                    return;
+                }
+            }
+
+            if (txtDisplay.Text.Contains(_displayDefault) && txtDisplay.Text.Length == 1)
+            {
+                txtDisplay.Clear();
+            }
+
+            txtDisplay.Text += digit;
+        }
+
+        private void AppendZero()
+        {
+            if (Operation.Result == _lastOperationSelected)
+            {
+                txtDisplay.Text = "0";
+                _lastOperationSelected = Operation.None;
+
+                return;
+            }
+            else
+            {
+                if (_lastOperationSelected != Operation.None)
+                {
+                    txtDisplay.Text = _displayDefault;
+                    _lastOperationSelected = Operation.None;
+                }
+                if (txtDisplay.Text.Length > 1 || !txtDisplay.Text.Contains("0"))
+                {
+                    txtDisplay.Text += "0";
+                }
+            }
+        }
+
+        private void CalculateOperation()
         {
             if (_currentOperationSelected == Operation.None)
             {
@@ -234,7 +249,7 @@ namespace Calculator.DesktopApp
                         caption: "Error!",
                         button: MessageBoxButton.OK,
                         icon: MessageBoxImage.Error);
-                    ButtonClear_Click(sender, e);
+                    ResetCalculator();
                 }
             }
 
@@ -245,11 +260,64 @@ namespace Calculator.DesktopApp
             _lastOperationSelected = Operation.Result;
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
+        private void ResetCalculator()
         {
-            if (e.Key == Key.Back)
+            txtDisplay.Text = _displayDefault;
+            txtDisplayMemory.Clear();
+            txtDisplayOperation.Clear();
+            _lastOperationSelected = Operation.None;
+            _currentOperationSelected = Operation.None;
+            _currentValue = 0d;
+        }
+
+        private void SetOperation(Operation operation)
+        {
+            if (operation == null)
             {
-                ButtonBackspace_Click(this, e);
+                return;
+            }
+
+            _lastOperationSelected = operation;
+            _currentOperationSelected = operation;
+            txtDisplayOperation.Text = operation.Sign;
+
+            if (txtDisplayMemory.Text.Equals(_emptyTextBoxValue))
+            {
+                txtDisplayMemory.Text = txtDisplay.Text;
+            }
+        }
+
+        private void TrimLastDigit()
+        {
+            if (Operation.Result == _lastOperationSelected)
+            {
+                txtDisplay.Text = _displayDefault;
+                _lastOperationSelected = Operation.None;
+
+                return;
+            }
+            else
+            {
+                if (_lastOperationSelected != Operation.None)
+                {
+                    txtDisplay.Text = _displayDefault;
+                    _lastOperationSelected = Operation.None;
+
+                    return;
+                }
+            }
+
+            if (txtDisplay.Text.Length == 1 && !txtDisplay.Text.Contains(_displayDefault))
+            {
+                txtDisplay.Text = _displayDefault;
+
+                return;
+            }
+
+            if (txtDisplay.Text.Length > 1)
+            {
+                var length = txtDisplay.Text.Length;
+                txtDisplay.Text = txtDisplay.Text.Remove(length - 1);
             }
         }
     }
