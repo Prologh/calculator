@@ -92,10 +92,10 @@ namespace Calculator.DesktopApp
                     TrimLastDigit();
                     break;
                 case Key.Enter:
-                    ButtonEquals_Click(this, e);
+                    Calculate();
                     break;
                 case Key.C:
-                    ButtonClear_Click(this, e);
+                    Clear();
                     break;
             }
         }
@@ -130,7 +130,7 @@ namespace Calculator.DesktopApp
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
-            ResetCalculator();
+            Clear();
         }
 
         private void ButtonOperation_Click(object sender, RoutedEventArgs e)
@@ -153,7 +153,7 @@ namespace Calculator.DesktopApp
 
         private void ButtonEquals_Click(object sender, RoutedEventArgs e)
         {
-            CalculateOperation();
+            Calculate();
         }
 
         private void AppendComma()
@@ -213,7 +213,7 @@ namespace Calculator.DesktopApp
             }
         }
 
-        private void CalculateOperation()
+        private void Calculate()
         {
             if (_currentOperationSelected == Operation.None)
             {
@@ -249,7 +249,7 @@ namespace Calculator.DesktopApp
                         caption: "Error!",
                         button: MessageBoxButton.OK,
                         icon: MessageBoxImage.Error);
-                    ResetCalculator();
+                    Clear();
                 }
             }
 
@@ -260,7 +260,7 @@ namespace Calculator.DesktopApp
             _lastOperationSelected = Operation.Result;
         }
 
-        private void ResetCalculator()
+        private void Clear()
         {
             txtDisplay.Text = _displayDefault;
             txtDisplayMemory.Clear();
